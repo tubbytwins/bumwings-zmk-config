@@ -1,0 +1,10 @@
+# Copyright (c) 2020 The ZMK Contributors
+# and (c) 2022 tubbytwins (Matthew A. Schnoor)
+# SPDX-License-Identifier: MIT
+
+if SHIELD_BUMWINGS_V1
+
+config ZMK_KEYBOARD_NAME
+    default "BumWings V1"
+
+endif

@@ -1,0 +1,8 @@
+file_format: "1"
+id: bumwings_v1
+name: BumWings V1
+type: shield
+url: https://github.com/nowhere
+requires: [waveshare_rp2040_zero]
+features:
+  - keys

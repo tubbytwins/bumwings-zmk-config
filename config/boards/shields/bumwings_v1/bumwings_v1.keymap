@@ -1,0 +1,124 @@
+/*
+ * Copyright (c) 2020 The ZMK Contributors
+ * and (c) 2022 tubbytwins (Matthew A. Schnoor)
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/keys.h>
+
+
+/*
+// Keyboard physical layout is roughly defined as follows:
+(4 rows x 14 columns - stagger is approximated)
+(numbers describe physical key labels, not the order in the array of row/column entries)
+
+		8	12	16	20				32	36	40	44
+	4												48	
+0		9	13	17	21	25		29	33	37	41	45		52
+	5												49
+1		10	14	18	22				34	38	42	46		53
+	6					26		30					50
+2			15								43			54
+					23				35
+3		7	11	19		27		31		39	47	51		55
+
+(keys 24 and 28 do not exist)
+(keys 23 and 35 are 2U thumb keys)
+(keys 27 and 31 are 1.5U thumb keys, and keys 26 and 30 are the adjacent 1U thumb keys)
+(keys 7,11,15,19 form the left side inverted T-cluster)
+(keys 39,43,47,51 form the right side inverted T-cluster)
+Switch SW0 is RC(0,0); switch SW1 is RC(1,0); switch SW4 is RC(0,1); etc.
+
+*/
+
+#define DEFAULT 0
+#define FIRST 1
+#define SECOND 2
+#define QWERTY 3
+
+
+/ {
+	macros {
+		hex_0x: hex_0x {
+			label = "ZM_hex_0x";
+			compatible = "zmk,behavior-macro";
+			#binding-cells = <0>;
+			wait-ms = <5>;
+			tap-ms = <5>;
+			bindings 
+			= <&macro_tap &kp N0 &kp X>;
+		};
+	};
+};
+
+/ {
+        keymap {
+                compatible = "zmk,keymap";
+		label = "Dvorak";
+		
+                default_layer {
+                	bindings = <
+//   ---------------------------------------------------------------------------------------------------------
+//   |  TAB |  '  |  ,  |  .  |  P  |  Y  |     na     |      na        |  F  |  G  |  C  |  R  |  L  |  =   |
+//   | CTRL |  A  |  O  |  E  |  U  |  I  |    BKSP    |     BKSP       |  D  |  H  |  T  |  N  |  S  |  -   |
+//   | SHFT |  ;  |  Q  |  J  |  K  |  X  | LGUI (1u)  |  LALT (1u)     |  B  |  M  |  W  |  V  |  Z  | SHFT |
+//   |  `   |  HM | PDN | PUP | END | SPC | l1 (1.5u)  |  RET/l2 (1.5u) | SPC | LFT |  UP |  DN | RGT |  /   |
+   &kp TAB   &kp SQT  &kp COMMA &kp DOT   &kp P   &kp Y                         &kp F   &kp G &kp C &kp R &kp L &kp EQUAL
+   &kp LCTRL &kp A    &kp O     &kp E     &kp U   &kp I     &kp BSPC  &kp BSPC  &kp D   &kp H &kp T &kp N &kp S &kp MINUS
+   &kp LSHFT &kp SEMI &kp Q     &kp J     &kp K   &kp X     &kp LGUI  &kp LALT  &kp B   &kp M &kp W &kp V &kp Z &kp RSHFT
+   &kp GRAVE &kp HOME &kp PG_DN &kp PG_UP &kp END &kp SPACE &mo 1     &lt 2 RET &kp SPACE &kp LEFT &kp UP &kp DOWN &kp RIGHT &kp SLASH
+                        >;
+                };
+
+                first_layer {
+                label = "First";
+                	bindings = <
+//   -----------------------------------------------------------------------------------------------------
+//   |  ESC |  !  |  @  |  #  |  $  |  %  |     na     |     na     |  0x |  7  |  8  |  9  |  0  |  +   |
+//   |      |  ^  |  &  |  *  |  (  |  )  |    DEL     |    BKSP    |  .  |  4  |  5  |  6  |  \  |  _   |
+//   |      |  :  |  {  |  }  |  [  |  ]  | LGUI (t1u) | LALT (t1u) |  0  |  1  |  2  |  3  |  |  |      |
+//   |  `   |     |     |     |     |     | l1 (self)  |  KP_enter  |     |     |     |     |     | MENU |
+   &kp ESC   &kp EXCL  &kp AT   &kp HASH &kp DLLR &kp PRCNT                     &hex_0x &kp N7 &kp N8 &kp N9 &kp N0   &kp PLUS
+   &trans    &kp CARET &kp AMPS &kp STAR &kp LPAR &kp RPAR  &kp DEL  &kp BSPC   &kp DOT &kp N4 &kp N5 &kp N6 &kp BSLH &kp UNDER
+   &trans    &kp COLON &kp LBRC &kp RBRC &kp LBKT &kp RBKT  &trans   &trans     &kp N0  &kp N1 &kp N2 &kp N3 &kp PIPE &trans
+   &kp TILDE &trans    &trans   &trans   &trans   &trans    &trans   &kp RET    &trans  &trans &trans &trans &trans   &kp K_APP
+
+                        >;
+                };
+                
+                second_layer {
+                label = "Second";
+                	bindings = <
+//   -----------------------------------------------------------------------------------------------------
+//   | A-Tab|  F1 |  F2 |  F3 |  F4 |  F5 |     na     |     na     |     |     |     |     |     |      |
+//   |      |  F6 |  F7 |  F8 |  F9 | F10 |    DEL     |    BSPC    |     |     |     |     |     |      |
+//   |      | F11 | F12 | F13 | F14 | F15 |            |            |     |     |     |     |     |      |
+//   |      |     |     |     |     |     |    RET     | l2 (self)  |     |     |     |     |     |  ESC |
+   &kp LA(TAB)	&kp F1  &kp F2  &kp F3  &kp F4  &kp F5                       &trans  &trans  &trans  &trans &trans    &trans 
+   &trans       &kp F6  &kp F7  &kp F8  &kp F9  &kp F10  &kp DEL  &kp BSPC   &trans  &trans  &trans  &trans &trans    &trans 
+   &trans       &kp F11 &kp F12 &kp F13 &kp F14 &kp F15  &trans   &trans     &trans  &trans  &trans  &trans &trans    &trans 
+   &trans       &trans  &trans  &trans  &trans  &trans   &kp RET  &trans     &trans  &trans  &trans  &trans &trans    &kp ESC 
+                	>;
+                
+                };
+
+                qwerty_layer {
+                label = "QWERTY";
+                	bindings = <
+//   ---------------------------------------------------------------------------------------------------------
+//   |  TAB |  Q  |  W  |  E  |  R  |  T  |     na     |      na        |  Y  |  U  |  I  |  O  |  P  |  =   |
+//   | CTRL |  A  |  S  |  D  |  F  |  G  |    BKSP    |     BKSP       |  H  |  J  |  K  |  L  |  ;  |  '   |
+//   | SHFT |  Z  |  X  |  C  |  V  |  B  | LGUI (1u)  |  LALT (1u)     |  N  |  M  |  ,  |  .  |  /  | SHFT |
+//   |  `   |  HM | PDN | PUP | END | SPC | l1 (1.5u)  |  RET/l2 (1.5u) | SPC | LFT |  UP |  DN | RGT |  -   |
+
+   &kp TAB    &kp Q    &kp W     &kp E     &kp R   &kp T                         &kp Y     &kp U    &kp I     &kp O    &kp P     &kp EQUAL
+   &kp LCTRL  &kp A    &kp S     &kp D     &kp F   &kp G     &kp BSPC  &kp BSPC  &kp H     &kp J    &kp K     &kp L    &kp SEMI  &kp SQT
+   &kp LSHFT  &kp Z    &kp X     &kp C     &kp V   &kp B     &kp LGUI  &kp ALT   &kp N     &kp M    &kp COMMA &kp DOT  &kp SLASH &kp RSHFT
+   &kp GRAVE  &kp HOME &kp PG_DN &kp PG_UP &kp END &kp SPACE &mo 1     &lt 2 RET &kp SPACE &kp LEFT &kp UP    &kp DOWN &kp RIGHT &kp MINUS
+                        >;
+                };
+
+        };
+};
